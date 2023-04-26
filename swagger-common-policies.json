@@ -1,0 +1,1095 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "api-common-policy",
+        "description": "Party policies and documents\n",
+        "version": "1.0"
+    },
+    "servers": [
+        {
+            "url": "https://preprod-api.almbrand.dk/common/policies"
+        }
+    ],
+    "paths": {
+        "/": {
+            "get": {
+                "tags": [
+                    "Policy"
+                ],
+                "summary": "Get Policies.",
+                "description": "Get all policies for a customer. If the parameter include_own = true the response will only include policy owned by the customer. Otherwise all policies accessible for the customer will be included. The customer is designated through the authorization bearer token.\n",
+                "operationId": "fetchPolicies",
+                "parameters": [
+                    {
+                        "name": "search",
+                        "in": "query",
+                        "schema": {
+                            "$ref": "#/components/schemas/Search"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PolicyPage"
+                                },
+                                "example": {
+                                    "_links": {
+                                        "self": {
+                                            "href": "string"
+                                        },
+                                        "first": {
+                                            "href": "string"
+                                        },
+                                        "prev": {
+                                            "href": "string"
+                                        },
+                                        "next": {
+                                            "href": "string"
+                                        },
+                                        "last": {
+                                            "href": "string"
+                                        }
+                                    },
+                                    "currency": "string",
+                                    "page": {
+                                        "size": 10,
+                                        "total_items": 0,
+                                        "total_pages": 0,
+                                        "number": 0
+                                    },
+                                    "page_total": {
+                                        "amount": 0
+                                    },
+                                    "total": {
+                                        "amount": 0
+                                    },
+                                    "period": {
+                                        "start_at": "string",
+                                        "end_at": "string"
+                                    },
+                                    "policies": [
+                                        {
+                                            "id": "106585963",
+                                            "policy_number": "106585963",
+                                            "type": "CAR",
+                                            "status": {
+                                                "title": "Aktiv",
+                                                "subtitle": "Policen er aktiv.",
+                                                "type": "ACTIVE"
+                                            },
+                                            "group": {
+                                                "title": "Biler og køretøjer",
+                                                "type": "vehicles"
+                                            },
+                                            "url": "https://api.almbrand.dk/common/policies/106585963",
+                                            "title": "Bilforsikring",
+                                            "subtitle": "Fiat 500 AB12645",
+                                            "price": {
+                                                "title": "årlig",
+                                                "amount": 1234.55,
+                                                "charged": "EVERY_MONTH",
+                                                "unit": "string"
+                                            },
+                                            "start": {
+                                                "title": "string",
+                                                "date": "string"
+                                            },
+                                            "end": {
+                                                "title": "string",
+                                                "date": "string"
+                                            }
+                                        }
+                                    ],
+                                    "household_relationships": [
+                                        {
+                                            "for_name": "string",
+                                            "last_name": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "BadRequest",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": 0,
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "headers": {
+                            "www-authenticate": {
+                                "description": "scope=[ required scope of the access token to access the requested resource ]",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": 0,
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": 0,
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{policy_id}": {
+            "get": {
+                "tags": [
+                    "Policy"
+                ],
+                "summary": "Get Policy",
+                "description": "Get a specific policy for a customer. If policy_id unknown or not accessible to the customer a 404 Not Found is returned. The customer is designated through the authorization bearer token.\n",
+                "operationId": "fetchPolicyById",
+                "parameters": [
+                    {
+                        "name": "policy_id",
+                        "in": "path",
+                        "description": "Unique id for a policy.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "part_no",
+                        "in": "query",
+                        "description": "A part number parameter of the agreement part",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Policy"
+                                },
+                                "example": {
+                                    "id": "106590727",
+                                    "policy_number": "321654987",
+                                    "type": "CAR",
+                                    "status": {
+                                        "title": "Aktiv",
+                                        "subtitle": "Policen er aktiv.",
+                                        "type": "ACTIVE"
+                                    },
+                                    "group": {
+                                        "title": "Biler og køretøjer",
+                                        "type": "vehicles"
+                                    },
+                                    "url": "https://api.almbrand.dk/common/policies/106590727",
+                                    "start": {
+                                        "title": "string",
+                                        "date": "string"
+                                    },
+                                    "end": {
+                                        "title": "string",
+                                        "date": "string"
+                                    },
+                                    "customer_id": "1234567890",
+                                    "currency": "DKK",
+                                    "objects": [
+                                        {
+                                            "title": "Fiat 500",
+                                            "subtitle": "AB 123456",
+                                            "properties": [
+                                                {
+                                                    "propertyType": "string",
+                                                    "title": "string",
+                                                    "subtitle": "string"
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "title": "Bilforsikring",
+                                    "subtitle": "Fiat 500 AB12645",
+                                    "price": {
+                                        "title": "årlig",
+                                        "amount": 1234.55,
+                                        "charged": "EVERY_MONTH",
+                                        "unit": "string"
+                                    },
+                                    "documents": [
+                                        {
+                                            "url": "http://common/policies/106590727/pdf",
+                                            "title": "Vilkår og betingelser",
+                                            "subtitle": "Betingelserne beskriver detaljeret, hvad forsikringen dækker og ikke dækker.",
+                                            "content_type": "application/pdf"
+                                        }
+                                    ],
+                                    "coverages": [
+                                        {
+                                            "url": "string",
+                                            "title": "Kasko",
+                                            "subtitle": "Dækker færdselsuheld, brand og tyveri og røveri af bilen. Kasko dækker også følgende. Selvrisiko",
+                                            "covered": true,
+                                            "properties": [
+                                                {
+                                                    "propertyType": "string",
+                                                    "title": "string",
+                                                    "subtitle": "string"
+                                                }
+                                            ],
+                                            "sub_coverages": [
+                                                {
+                                                    "title": "string",
+                                                    "subtitle": "string",
+                                                    "properties": [
+                                                        {
+                                                            "propertyType": "string",
+                                                            "title": "string",
+                                                            "subtitle": "string"
+                                                        }
+                                                    ]
+                                                }
+                                            ]
+                                        }
+                                    ],
+                                    "parties": [
+                                        {
+                                            "name": "string",
+                                            "address": "string"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "headers": {
+                            "www-authenticate": {
+                                "description": "scope=[ required scope of the access token to access the requested resource ]",
+                                "schema": {
+                                    "type": "string"
+                                }
+                            }
+                        },
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": 0,
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "NotFound",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": 0,
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": 0,
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/{policy_id}/pdf": {
+            "get": {
+                "tags": [
+                    "Document",
+                    "Policy",
+                    "Party"
+                ],
+                "summary": "Get document",
+                "description": "Get a document (pdf) by policy_id, for the customer to which the bearer token in Authorization header is issued. If the policy_id is not belonging or accessible to the customer a problem occurs.\n",
+                "operationId": "fetchPolicyPdfById",
+                "parameters": [
+                    {
+                        "name": "policy_id",
+                        "in": "path",
+                        "description": "Unique id for a policy.",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "content": {
+                            "application/pdf": {
+                                "schema": {
+                                    "type": "object"
+                                },
+                                "examples": {
+                                    "default": {
+                                        "value": null
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Problem Occured",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": 0,
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Problem Occured",
+                        "content": {
+                            "application/problem+json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Problem"
+                                },
+                                "example": {
+                                    "type": "string",
+                                    "title": "string",
+                                    "status": 0,
+                                    "detail": "string",
+                                    "instance": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Search": {
+                "type": "object",
+                "properties": {
+                    "include_own": {
+                        "type": "boolean",
+                        "description": "Indicates that the policies owned by the party should be returned in response."
+                    },
+                    "page": {
+                        "type": "integer",
+                        "description": "The page offset",
+                        "format": "int32"
+                    },
+                    "size": {
+                        "type": "integer",
+                        "description": "The page size",
+                        "format": "int32"
+                    }
+                }
+            },
+            "PolicyPage": {
+                "type": "object",
+                "properties": {
+                    "_links": {
+                        "$ref": "#/components/schemas/Common.Links"
+                    },
+                    "currency": {
+                        "type": "string"
+                    },
+                    "page": {
+                        "$ref": "#/components/schemas/Pagination"
+                    },
+                    "page_total": {
+                        "$ref": "#/components/schemas/Total"
+                    },
+                    "total": {
+                        "$ref": "#/components/schemas/Total"
+                    },
+                    "period": {
+                        "$ref": "#/components/schemas/Period"
+                    },
+                    "policies": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/PolicySummary"
+                        }
+                    },
+                    "household_relationships": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HouseholdRelationship"
+                        }
+                    }
+                },
+                "description": "A page of policies. The total price is calculated as the sum price of all policies on the page. It does NOT cover all policies for the customer."
+            },
+            "Total": {
+                "properties": {
+                    "amount": {
+                        "type": "number"
+                    }
+                },
+                "description": "Totals for the page and periodx"
+            },
+            "Common.Links": {
+                "properties": {
+                    "self": {
+                        "$ref": "#/components/schemas/Common.Link"
+                    },
+                    "first": {
+                        "$ref": "#/components/schemas/Common.Link"
+                    },
+                    "prev": {
+                        "$ref": "#/components/schemas/Common.Link"
+                    },
+                    "next": {
+                        "$ref": "#/components/schemas/Common.Link"
+                    },
+                    "last": {
+                        "$ref": "#/components/schemas/Common.Link"
+                    }
+                }
+            },
+            "Common.Link": {
+                "properties": {
+                    "href": {
+                        "type": "string",
+                        "format": "url"
+                    }
+                }
+            },
+            "Period": {
+                "properties": {
+                    "start_at": {
+                        "type": "string",
+                        "format": "date"
+                    },
+                    "end_at": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "description": "The period considered and for which the sum of charges is calculated"
+            },
+            "DateDescription": {
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "date": {
+                        "type": "string",
+                        "format": "date"
+                    }
+                },
+                "description": "A date with a label"
+            },
+            "PolicySummary": {
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Identification of a policy eg. the policy number stated on the policy document signed by the customer.",
+                        "example": "106585963"
+                    },
+                    "policy_number": {
+                        "type": "string",
+                        "example": "106585963"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/Type"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "group": {
+                        "$ref": "#/components/schemas/Group"
+                    },
+                    "url": {
+                        "type": "string",
+                        "description": "RESTful urls for policy resource",
+                        "example": "https://api.almbrand.dk/common/policies/106585963"
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "title for the policy",
+                        "example": "Bilforsikring"
+                    },
+                    "subtitle": {
+                        "type": "string",
+                        "description": "subtitle for the policy.",
+                        "example": "Fiat 500 AB12645"
+                    },
+                    "price": {
+                        "$ref": "#/components/schemas/Price"
+                    },
+                    "start": {
+                        "$ref": "#/components/schemas/DateDescription"
+                    },
+                    "end": {
+                        "$ref": "#/components/schemas/DateDescription"
+                    }
+                }
+            },
+            "Policy": {
+                "type": "object",
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "example": "106590727"
+                    },
+                    "policy_number": {
+                        "type": "string",
+                        "example": "321654987"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/Type"
+                    },
+                    "status": {
+                        "$ref": "#/components/schemas/Status"
+                    },
+                    "group": {
+                        "$ref": "#/components/schemas/Group"
+                    },
+                    "url": {
+                        "type": "string",
+                        "example": "https://api.almbrand.dk/common/policies/106590727"
+                    },
+                    "start": {
+                        "$ref": "#/components/schemas/DateDescription"
+                    },
+                    "end": {
+                        "$ref": "#/components/schemas/DateDescription"
+                    },
+                    "customer_id": {
+                        "type": "string",
+                        "example": "1234567890"
+                    },
+                    "currency": {
+                        "type": "string",
+                        "example": "DKK"
+                    },
+                    "objects": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/InsurableObject"
+                        }
+                    },
+                    "title": {
+                        "type": "string",
+                        "description": "title for the policy",
+                        "example": "Bilforsikring"
+                    },
+                    "subtitle": {
+                        "type": "string",
+                        "description": "subtitle for the policy.",
+                        "example": "Fiat 500 AB12645"
+                    },
+                    "price": {
+                        "$ref": "#/components/schemas/Price"
+                    },
+                    "documents": {
+                        "$ref": "#/components/schemas/DocumentList"
+                    },
+                    "coverages": {
+                        "$ref": "#/components/schemas/CoverageList"
+                    },
+                    "parties": {
+                        "$ref": "#/components/schemas/PartyList"
+                    }
+                }
+            },
+            "PartyList": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Party"
+                },
+                "description": "A list of parties (people or organizations) related to the policy"
+            },
+            "Party": {
+                "type": "object",
+                "properties": {
+                    "name": {
+                        "type": "string"
+                    },
+                    "address": {
+                        "type": "string"
+                    }
+                }
+            },
+            "CoverageList": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Coverage"
+                },
+                "description": "A list of coverages related to the policy"
+            },
+            "Price": {
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "årlig"
+                    },
+                    "amount": {
+                        "type": "number",
+                        "example": 1234.55
+                    },
+                    "charged": {
+                        "$ref": "#/components/schemas/Charged"
+                    },
+                    "unit": {
+                        "type": "string",
+                        "x-extensible-enum": [
+                            "dk",
+                            "km"
+                        ]
+                    }
+                }
+            },
+            "Coverage": {
+                "properties": {
+                    "url": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Kasko"
+                    },
+                    "subtitle": {
+                        "type": "string",
+                        "example": "Dækker færdselsuheld, brand og tyveri og røveri af bilen. Kasko dækker også følgende. Selvrisiko"
+                    },
+                    "covered": {
+                        "type": "boolean",
+                        "description": "Indicates if the coverage is included or not",
+                        "example": true
+                    },
+                    "properties": {
+                        "$ref": "#/components/schemas/CoveragePropertyList"
+                    },
+                    "sub_coverages": {
+                        "$ref": "#/components/schemas/SubcoverageList"
+                    }
+                }
+            },
+            "SubcoverageList": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Subcoverage"
+                },
+                "description": "List of sub coverages"
+            },
+            "Subcoverage": {
+                "properties": {
+                    "title": {
+                        "type": "string"
+                    },
+                    "subtitle": {
+                        "type": "string"
+                    },
+                    "properties": {
+                        "$ref": "#/components/schemas/CoveragePropertyList"
+                    }
+                }
+            },
+            "DocumentList": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/Document"
+                },
+                "description": "A list of documents associated with the policy"
+            },
+            "Document": {
+                "properties": {
+                    "url": {
+                        "type": "string",
+                        "example": "http://common/policies/106590727/pdf"
+                    },
+                    "title": {
+                        "type": "string",
+                        "example": "Vilkår og betingelser"
+                    },
+                    "subtitle": {
+                        "type": "string",
+                        "example": "Betingelserne beskriver detaljeret, hvad forsikringen dækker og ikke dækker."
+                    },
+                    "content_type": {
+                        "type": "string",
+                        "example": "application/pdf"
+                    }
+                },
+                "description": "A single document related to the policy eg. terms and conditions or the policy itself."
+            },
+            "Group": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Biler og køretøjer"
+                    },
+                    "type": {
+                        "type": "string",
+                        "example": "vehicles",
+                        "x-extensible-enum": [
+                            "buildings",
+                            "operations",
+                            "employees",
+                            "vehicles",
+                            "housing",
+                            "health",
+                            "family",
+                            "other"
+                        ]
+                    }
+                },
+                "description": "The group in which the policy is categorized."
+            },
+            "Status": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Aktiv"
+                    },
+                    "subtitle": {
+                        "type": "string",
+                        "example": "Policen er aktiv."
+                    },
+                    "type": {
+                        "enum": [
+                            "ACTIVE",
+                            "PENDING",
+                            "OFFER",
+                            "CANCELLED"
+                        ],
+                        "type": "string",
+                        "example": "ACTIVE"
+                    }
+                },
+                "description": "The current status of the policy."
+            },
+            "Charged": {
+                "enum": [
+                    "EVERY_MONTH",
+                    "EVERY_TWO_MONTHS",
+                    "EVERY_THREE_MONTHS",
+                    "EVERY_FOUR_MONTHS",
+                    "EVERY_SIX_MONTHS",
+                    "EVERY_YEAR",
+                    "ONCE"
+                ],
+                "type": "string",
+                "description": "How often is the insurance premium charged",
+                "example": "EVERY_MONTH"
+            },
+            "InsurableObject": {
+                "type": "object",
+                "properties": {
+                    "title": {
+                        "type": "string",
+                        "example": "Fiat 500"
+                    },
+                    "subtitle": {
+                        "type": "string",
+                        "example": "AB 123456"
+                    },
+                    "properties": {
+                        "$ref": "#/components/schemas/InsurableObjectPropertyList"
+                    }
+                },
+                "description": "The Insurable Object is an item which may be included or excluded from an insurance coverage or policy, either as the object for which possible damages to the object or loss of the object is insured, or as the object for which damages caused by the object are insured"
+            },
+            "InsurableObjectPropertyList": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/InsurableObjectProperty"
+                }
+            },
+            "HouseholdRelationship": {
+                "type": "object",
+                "properties": {
+                    "for_name": {
+                        "type": "string"
+                    },
+                    "last_name": {
+                        "type": "string"
+                    }
+                },
+                "description": "Holding the information for household persons"
+            },
+            "InsurableObjectProperty": {
+                "required": [
+                    "propertyType"
+                ],
+                "type": "object",
+                "properties": {
+                    "propertyType": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "subtitle": {
+                        "type": "string"
+                    }
+                },
+                "discriminator": {
+                    "propertyName": "propertyType",
+                    "mapping": {
+                        "limitList": "#/components/schemas/LimitList",
+                        "deductible": "#/components/schemas/Deductible",
+                        "total": "#/components/schemas/Total",
+                        "titles": "#/components/schemas/Titles"
+                    }
+                }
+            },
+            "LimitList": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InsurableObjectProperty"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "limits": {
+                                "type": "array",
+                                "items": {
+                                    "$ref": "#/components/schemas/Limit"
+                                }
+                            }
+                        }
+                    }
+                ],
+                "description": "List of limits"
+            },
+            "Limit": {
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "x-extensible-enum": [
+                            "CAR_USAGE",
+                            "HOUSE_VALUATION"
+                        ]
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "subtitle": {
+                        "type": "string"
+                    },
+                    "prefix": {
+                        "type": "string"
+                    },
+                    "value": {
+                        "type": "number",
+                        "example": 1234.55
+                    },
+                    "unit": {
+                        "type": "string",
+                        "x-extensible-enum": [
+                            "dk",
+                            "km"
+                        ]
+                    }
+                },
+                "description": "Limit defines the highest amount that could be paid (or can be another limit expression such as number of days of compensation), associated with the policy coverages."
+            },
+            "Deductible": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InsurableObjectProperty"
+                    },
+                    {
+                        "type": "object",
+                        "properties": {
+                            "amount": {
+                                "type": "number",
+                                "example": "1234.55"
+                            },
+                            "unit": {
+                                "type": "string",
+                                "x-extensible-enum": [
+                                    "dk",
+                                    "percentage"
+                                ]
+                            }
+                        }
+                    }
+                ],
+                "description": "Deductible is the amount of money the insured will pay on an insurance claim before the coverage kicks in and pays the rest."
+            },
+            "Titles": {
+                "allOf": [
+                    {
+                        "$ref": "#/components/schemas/InsurableObjectProperty"
+                    },
+                    {
+                        "type": "object"
+                    }
+                ],
+                "description": "Titles holds a title and subtitle only"
+            },
+            "CoveragePropertyList": {
+                "type": "array",
+                "items": {
+                    "$ref": "#/components/schemas/InsurableObjectProperty"
+                }
+            },
+            "Type": {
+                "type": "string",
+                "description": "The type of policy.",
+                "example": "CAR",
+                "x-extensible-enum": [
+                    "CAR",
+                    "HOME",
+                    "HOUSE",
+                    "SHORT_TRAVEL",
+                    "TRAVEL",
+                    "BUILDING",
+                    "ACCIDENT",
+                    "DOG",
+                    "HOLIDAY_HOUSE",
+                    "OWNERSHIP_CHANGE"
+                ]
+            },
+            "Pagination": {
+                "type": "object",
+                "properties": {
+                    "size": {
+                        "type": "integer",
+                        "example": 10
+                    },
+                    "total_items": {
+                        "type": "integer"
+                    },
+                    "total_pages": {
+                        "type": "integer"
+                    },
+                    "number": {
+                        "type": "integer"
+                    }
+                },
+                "description": "Describes properties for the page."
+            },
+            "Problem": {
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "title": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "integer",
+                        "format": "int32"
+                    },
+                    "detail": {
+                        "type": "string"
+                    },
+                    "instance": {
+                        "type": "string"
+                    }
+                }
+            }
+        },
+        "securitySchemes": {
+            "apiKeyHeader": {
+                "type": "apiKey",
+                "name": "Ocp-Apim-Subscription-Key",
+                "in": "header"
+            },
+            "apiKeyQuery": {
+                "type": "apiKey",
+                "name": "subscription-key",
+                "in": "query"
+            }
+        }
+    },
+    "security": [
+        {},
+        {
+            "apiKeyHeader": []
+        },
+        {
+            "apiKeyQuery": []
+        }
+    ],
+    "tags": [
+        {
+            "name": "Policy",
+            "description": "Party policies."
+        }
+    ]
+}
